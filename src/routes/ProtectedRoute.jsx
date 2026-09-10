@@ -5,7 +5,7 @@ import {
   useLocation,
 } from "react-router-dom";
 
-import useAuth from "../hooks/useAuth";
+import useAuth from "../Hooks/useAuth";
 
 const ProtectedRoute = () => {
   const {
