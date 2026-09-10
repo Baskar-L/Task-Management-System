@@ -4,13 +4,13 @@ import {
   Navigate
 } from "react-router-dom";
 
-import Login from "../pages/auth/Login";
-import Register from "../pages/auth/Register";
+import Login from "../Pages/Auth/Login";
+import Register from "../Pages/Auth/Register";
 
-import Dashboard from "../pages/tasks/Dashboard";
-import CreateTask from "../pages/tasks/CreateTask";
-import EditTask from "../pages/tasks/EditTask";
-import TaskDetails from "../pages/tasks/TaskDetails";
+import Dashboard from "../Pages/tasks/Dashboard";
+import CreateTask from "../Pages/tasks/CreateTask";
+import EditTask from "../Pages/tasks/EditTask";
+import TaskDetails from "../Pages/tasks/TaskDetails";
 
 import ProtectedRoute from "./ProtectedRoute";
 import MainLayout from "../layouts/MainLayout";
