@@ -1,17 +1,21 @@
 import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
 import  useAuth  from "../../hooks/useAuth";
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const { login } = useAuth();
+  const { register } = useAuth();
 
   const [formData, setFormData] =
     useState({
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     });
 
   const [error, setError] =
@@ -36,11 +40,29 @@ const Login = () => {
     event.preventDefault();
 
     if (
+      !formData.name ||
       !formData.email ||
       !formData.password
     ) {
       setError(
-        "Email and password are required."
+        "All required fields must be filled."
+      );
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError(
+        "Password must be at least 6 characters."
+      );
+      return;
+    }
+
+    if (
+      formData.password !==
+      formData.confirmPassword
+    ) {
+      setError(
+        "Passwords do not match."
       );
       return;
     }
@@ -49,22 +71,19 @@ const Login = () => {
       setLoading(true);
       setError("");
 
-      await login(
+      await register(
+        formData.name,
         formData.email,
         formData.password
       );
 
-      const redirectTo =
-        location.state?.from?.pathname ||
-        "/dashboard";
-
-      navigate(redirectTo, {
+      navigate("/dashboard", {
         replace: true,
       });
     } catch (err) {
       setError(
         err?.response?.data?.message ||
-          "Login failed. Please try again."
+          "Registration failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -80,17 +99,17 @@ const Login = () => {
           </h1>
 
           <p className="mt-2 text-sm text-gray-500">
-            Sign in to manage your tasks
+            Create your account
           </p>
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-lg sm:p-8">
           <h2 className="text-2xl font-bold text-gray-900">
-            Welcome back
+            Create account
           </h2>
 
           <p className="mt-1 text-sm text-gray-500">
-            Enter your credentials to continue.
+            Start managing your tasks today.
           </p>
 
           {error && (
@@ -103,6 +122,29 @@ const Login = () => {
             onSubmit={handleSubmit}
             className="mt-6 space-y-5"
           >
+            {/* Name */}
+            <div>
+              <label
+                htmlFor="name"
+                className="mb-2 block text-sm font-medium text-gray-700"
+              >
+                Name
+              </label>
+
+              <input
+                id="name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Your name"
+                maxLength={50}
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#254593] focus:ring-2 focus:ring-[#254593]/20"
+              />
+            </div>
+
+            {/* Email */}
             <div>
               <label
                 htmlFor="email"
@@ -119,10 +161,11 @@ const Login = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-[#254593] focus:ring-2 focus:ring-[#254593]/20"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#254593] focus:ring-2 focus:ring-[#254593]/20"
               />
             </div>
 
+            {/* Password */}
             <div>
               <label
                 htmlFor="password"
@@ -135,11 +178,34 @@ const Login = () => {
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="current-password"
+                autoComplete="new-password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Enter your password"
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-[#254593] focus:ring-2 focus:ring-[#254593]/20"
+                placeholder="Minimum 6 characters"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#254593] focus:ring-2 focus:ring-[#254593]/20"
+              />
+            </div>
+
+            {/* Confirm */}
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="mb-2 block text-sm font-medium text-gray-700"
+              >
+                Confirm Password
+              </label>
+
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                value={
+                  formData.confirmPassword
+                }
+                onChange={handleChange}
+                placeholder="Confirm your password"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#254593] focus:ring-2 focus:ring-[#254593]/20"
               />
             </div>
 
@@ -149,18 +215,18 @@ const Login = () => {
               className="w-full rounded-lg bg-[#254593] px-5 py-3 font-semibold text-white transition hover:bg-[#1d397c] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading
-                ? "Signing in..."
-                : "Sign In"}
+                ? "Creating account..."
+                : "Create Account"}
             </button>
           </form>
 
           <p className="mt-6 text-center text-sm text-gray-500">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <Link
-              to="/register"
+              to="/login"
               className="font-semibold text-[#254593] hover:underline"
             >
-              Register
+              Sign in
             </Link>
           </p>
         </div>
@@ -169,4 +235,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
