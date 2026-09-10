@@ -77,7 +77,7 @@ const Register = () => {
         formData.password
       );
 
-      navigate("/dashboard", {
+      navigate("/login", {
         replace: true,
       });
     } catch (err) {
